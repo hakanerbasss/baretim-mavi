@@ -1,0 +1,173 @@
+{
+  "version": 1,
+  "tips": [
+    {
+      "category": "overtime",
+      "icon": "clock",
+      "title": "Fazla Mesai Ücreti",
+      "text": "Haftalık 45 saati aşan çalışma %50 zamlı ödenir. Gece mesaisi ise %25 zamlıdır.",
+      "law": "İş Kanunu Mad. 41"
+    },
+    {
+      "category": "overtime",
+      "icon": "clock",
+      "title": "Yıllık Fazla Mesai Sınırı",
+      "text": "Bir işçi yılda en fazla 270 saat fazla çalışma yapabilir. Bu sınır aşılamaz.",
+      "law": "İş Kanunu Mad. 41"
+    },
+    {
+      "category": "overtime",
+      "icon": "clock",
+      "title": "Bayram Mesaisi",
+      "text": "Ulusal bayram ve genel tatillerde çalışan işçiye %100 zamlı ücret ödenir.",
+      "law": "İş Kanunu Mad. 47"
+    },
+    {
+      "category": "overtime",
+      "icon": "clock",
+      "title": "Serbest Zaman Hakkı",
+      "text": "İşçi fazla mesai yerine her saat için 1.5 saat serbest zaman kullanmayı tercih edebilir.",
+      "law": "İş Kanunu Mad. 41/4"
+    },
+    {
+      "category": "severance",
+      "icon": "bank",
+      "title": "Kıdem Tazminatı Şartı",
+      "text": "Kıdem tazminatı alabilmek için en az 1 yıl aynı işyerinde çalışmış olmak gerekir.",
+      "law": "1475 Sayılı Kanun Mad. 14"
+    },
+    {
+      "category": "severance",
+      "icon": "bank",
+      "title": "Kıdem Tazminatı Tavanı",
+      "text": "Kıdem tazminatı brüt maaş ile tavan arasındaki düşük değer üzerinden hesaplanır. Tavan her yıl güncellenir.",
+      "law": "1475 Sayılı Kanun Mad. 14"
+    },
+    {
+      "category": "severance",
+      "icon": "bank",
+      "title": "İhbar Süreleri",
+      "text": "6 aydan az: 2 hafta, 6 ay-1.5 yıl: 4 hafta, 1.5-3 yıl: 6 hafta, 3+ yıl: 8 hafta ihbar süresi uygulanır.",
+      "law": "İş Kanunu Mad. 17"
+    },
+    {
+      "category": "severance",
+      "icon": "bank",
+      "title": "Emeklilik Hakkı",
+      "text": "Emeklilik nedeniyle istifa eden işçi, kıdem tazminatı almaya hak kazanır.",
+      "law": "1475 Sayılı Kanun Mad. 14"
+    },
+    {
+      "category": "tax",
+      "icon": "receipt",
+      "title": "Asgari Ücret Muafiyeti",
+      "text": "Asgari ücretin net tutarına kadar olan kısım gelir vergisinden muaftır.",
+      "law": "GVK Geçici Mad. 93"
+    },
+    {
+      "category": "tax",
+      "icon": "receipt",
+      "title": "Kümülatif Vergi Matrahı",
+      "text": "Vergi dilimi yıl başından itibaren kümülatif matrah toplamına göre belirlenir. Yıl sonuna doğru daha yüksek dilime geçebilirsiniz.",
+      "law": "GVK Mad. 103"
+    },
+    {
+      "category": "tax",
+      "icon": "receipt",
+      "title": "SGK Prim Kesintisi",
+      "text": "İşçi payı olarak brüt maaştan %14 SGK ve %1 işsizlik sigortası kesilir.",
+      "law": "5510 Sayılı Kanun"
+    },
+    {
+      "category": "tax",
+      "icon": "receipt",
+      "title": "Damga Vergisi",
+      "text": "Brüt maaş üzerinden binde 7,59 oranında damga vergisi kesilir.",
+      "law": "Damga Vergisi Kanunu"
+    },
+    {
+      "category": "leave",
+      "icon": "calendar",
+      "title": "Yıllık İzin Süreleri",
+      "text": "1-5 yıl: 14 gün, 5-15 yıl: 20 gün, 15+ yıl: 26 gün yıllık ücretli izin hakkı vardır.",
+      "law": "İş Kanunu Mad. 53"
+    },
+    {
+      "category": "leave",
+      "icon": "calendar",
+      "title": "Genç İşçi İzni",
+      "text": "18 yaşından küçük ve 50 yaşından büyük işçilere en az 20 gün yıllık izin verilir.",
+      "law": "İş Kanunu Mad. 53"
+    },
+    {
+      "category": "leave",
+      "icon": "calendar",
+      "title": "Yeraltı İşçisi Hakkı",
+      "text": "Maden ocakları ve yeraltında çalışanlara 4 gün ek yıllık izin verilir.",
+      "law": "İş Kanunu Mad. 53"
+    },
+    {
+      "category": "leave",
+      "icon": "calendar",
+      "title": "İzin Bölünmesi",
+      "text": "Yıllık izin tarafların anlaşmasıyla bir bölümü 10 günden az olmamak üzere bölünebilir.",
+      "law": "İş Kanunu Mad. 56"
+    },
+    {
+      "category": "general",
+      "icon": "gavel",
+      "title": "Deneme Süresi",
+      "text": "İş sözleşmesine en fazla 2 ay deneme süresi konulabilir. Toplu sözleşme ile 4 aya çıkarılabilir.",
+      "law": "İş Kanunu Mad. 15"
+    },
+    {
+      "category": "general",
+      "icon": "gavel",
+      "title": "Hafta Tatili",
+      "text": "İşçilere 7 günlük zaman dilimi içinde kesintisiz en az 24 saat dinlenme verilmelidir.",
+      "law": "İş Kanunu Mad. 46"
+    },
+    {
+      "category": "general",
+      "icon": "gavel",
+      "title": "Doğum İzni",
+      "text": "Kadın işçiye doğumdan önce 8, doğumdan sonra 8 hafta olmak üzere toplam 16 hafta ücretli izin verilir.",
+      "law": "İş Kanunu Mad. 74"
+    },
+    {
+      "category": "general",
+      "icon": "gavel",
+      "title": "Babalık İzni",
+      "text": "Erkek işçiye eşinin doğum yapması halinde 5 gün ücretli izin verilir.",
+      "law": "İş Kanunu Mad. 46"
+    },
+    {
+      "category": "general",
+      "icon": "gavel",
+      "title": "Evlenme İzni",
+      "text": "İşçinin evlenmesi halinde 3 gün ücretli izin hakkı bulunmaktadır.",
+      "law": "İş Kanunu Mad. 46"
+    },
+    {
+      "category": "general",
+      "icon": "gavel",
+      "title": "İşe İade Davası",
+      "text": "En az 6 ay kıdemi olan işçi, 30+ çalışanlı işyerinde haksız fesih halinde işe iade davası açabilir.",
+      "law": "İş Kanunu Mad. 18-21"
+    },
+    {
+      "category": "general",
+      "icon": "shield",
+      "title": "Mobbing Koruması",
+      "text": "İşyerinde psikolojik tacize (mobbing) maruz kalan işçi, iş sözleşmesini haklı nedenle feshedebilir.",
+      "law": "İş Kanunu Mad. 24/II"
+    },
+    {
+      "category": "general",
+      "icon": "shield",
+      "title": "Maaş Gecikme Hakkı",
+      "text": "Maaşı 20 gün geciken işçi, iş görme borcunu yerine getirmekten kaçınabilir ve bu durum grev sayılmaz.",
+      "law": "İş Kanunu Mad. 34"
+    }
+  ]
+}
