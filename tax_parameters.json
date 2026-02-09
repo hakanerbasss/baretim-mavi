@@ -1,0 +1,16 @@
+{
+  "year": 2026,
+  "last_update": "2026-02-02",
+  "min_wage_gross": 33030,
+  "severance_ceiling": 64948.77,
+  "stamp_tax_rate": 0.00759,
+  "sgk_employee_rate": 0.14,
+  "unemployment_rate": 0.01,
+  "tax_brackets": [
+    {"limit": 190000, "rate": 0.15},
+    {"limit": 550000, "rate": 0.20},
+    {"limit": 1900000, "rate": 0.27},
+    {"limit": 6600000, "rate": 0.35},
+    {"limit": 999999999, "rate": 0.40}
+  ]
+}
