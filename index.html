@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baretim Mavi — İşçi Hakları Hesaplayıcı</title>
+<meta name="description" content="Kıdem tazminatı, vergi, mesai, yıllık izin — tüm işçi haklarınızı tek uygulamada hesaplayın.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --p: #7C3AED;
+  --pl: #A78BFA;
+  --pd: #4C1D95;
+  --gold: #F59E0B;
+  --green: #10B981;
+  --red: #EF4444;
+  --bg: #07030F;
+  --card: #110820;
+  --border: rgba(124,58,237,0.2);
+  --text: #F0EAFF;
+  --muted: #8B7DB0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(7,3,15,0.85);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-logo span { color: var(--pl); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--text); }
+
+.nav-btn {
+  background: linear-gradient(135deg, var(--p), var(--pl));
+  color: white !important;
+  padding: 9px 20px;
+  border-radius: 100px;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 20px rgba(124,58,237,0.35);
+  transition: transform 0.2s, box-shadow 0.2s !important;
+}
+
+.nav-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 28px rgba(124,58,237,0.45) !important;
+  color: white !important;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 24px 80px;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 0%, rgba(124,58,237,0.22) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(167,139,250,0.1) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(124,58,237,0.15);
+  border: 1px solid rgba(124,58,237,0.35);
+  border-radius: 100px;
+  padding: 7px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pl);
+  margin-bottom: 28px;
+  animation: fadeUp 0.6s ease both;
+}
+
+.hero-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(48px, 9vw, 96px);
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 10px;
+  animation: fadeUp 0.6s ease 0.1s both;
+}
+
+.hero-title .accent {
+  background: linear-gradient(135deg, #A78BFA 0%, #F59E0B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: clamp(16px, 2.5vw, 22px);
+  color: var(--muted);
+  max-width: 560px;
+  margin: 16px auto 40px;
+  animation: fadeUp 0.6s ease 0.2s both;
+}
+
+.hero-btns {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeUp 0.6s ease 0.3s both;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, var(--p), var(--pl));
+  color: white;
+  text-decoration: none;
+  padding: 16px 36px;
+  border-radius: 100px;
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: 0 12px 40px rgba(124,58,237,0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 50px rgba(124,58,237,0.5);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+  text-decoration: none;
+  padding: 16px 36px;
+  border-radius: 100px;
+  font-size: 16px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-secondary:hover {
+  background: rgba(124,58,237,0.1);
+  border-color: rgba(124,58,237,0.4);
+}
+
+.hero-stats {
+  display: flex;
+  gap: 48px;
+  justify-content: center;
+  margin-top: 64px;
+  animation: fadeUp 0.6s ease 0.4s both;
+}
+
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--pl);
+}
+
+.stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+/* ── SECTIONS ── */
+section { padding: 100px 24px; max-width: 1100px; margin: 0 auto; }
+
+.section-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pl);
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 800;
+  margin-bottom: 16px;
+  line-height: 1.1;
+}
+
+.section-sub { font-size: 17px; color: var(--muted); max-width: 540px; line-height: 1.7; }
+
+/* ── FEATURES ── */
+#features { max-width: 1100px; }
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 56px;
+}
+
+.feat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 28px;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.feat-card:hover {
+  border-color: rgba(124,58,237,0.5);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(124,58,237,0.15);
+}
+
+.feat-icon {
+  width: 52px;
+  height: 52px;
+  background: rgba(124,58,237,0.15);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+.feat-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.feat-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+/* ── HOW ── */
+#how { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); max-width: none; padding: 100px 24px; }
+#how .inner { max-width: 1100px; margin: 0 auto; }
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 56px;
+}
+
+.step { text-align: center; }
+
+.step-num {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--p), var(--pl));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: white;
+  margin: 0 auto 16px;
+  box-shadow: 0 8px 24px rgba(124,58,237,0.35);
+}
+
+.step-title { font-weight: 700; font-size: 16px; margin-bottom: 8px; }
+.step-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+/* ── SOLO DEV ── */
+.solo-card {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, rgba(58,0,104,0.8), rgba(106,27,154,0.6), rgba(171,71,188,0.4));
+  border: 1px solid rgba(167,139,250,0.3);
+  border-radius: 32px;
+  padding: 64px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.solo-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,215,0,0.06), transparent);
+  pointer-events: none;
+}
+
+.solo-emoji { font-size: 56px; margin-bottom: 20px; display: block; }
+.solo-title { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; margin-bottom: 16px; }
+.solo-desc { font-size: 17px; color: rgba(255,255,255,0.8); max-width: 500px; margin: 0 auto 32px; line-height: 1.7; }
+.stars-row { font-size: 32px; letter-spacing: 6px; margin-bottom: 32px; }
+
+/* ── PRIVACY ── */
+#gizlilik {
+  max-width: 800px;
+  padding: 100px 24px;
+}
+
+.policy-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 48px;
+  margin-top: 40px;
+}
+
+.policy-box h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--pl);
+  margin: 32px 0 12px;
+}
+
+.policy-box h3:first-child { margin-top: 0; }
+
+.policy-box p {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 8px;
+}
+
+.policy-box ul {
+  list-style: none;
+  padding: 0;
+}
+
+.policy-box ul li {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.8;
+  padding-left: 20px;
+  position: relative;
+  margin-bottom: 4px;
+}
+
+.policy-box ul li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  color: var(--pl);
+  font-weight: 700;
+}
+
+.policy-date {
+  display: inline-block;
+  background: rgba(124,58,237,0.15);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 13px;
+  color: var(--pl);
+  margin-bottom: 24px;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.footer-inner { max-width: 1100px; margin: 0 auto; }
+
+.footer-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.footer-logo span { color: var(--pl); }
+
+.footer-links {
+  display: flex;
+  gap: 28px;
+  justify-content: center;
+  list-style: none;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover { color: var(--text); }
+
+.footer-copy { font-size: 13px; color: var(--muted); margin-top: 16px; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .features-grid { grid-template-columns: 1fr 1fr; }
+  .steps { grid-template-columns: 1fr 1fr; }
+  .nav-links { display: none; }
+  .hero-stats { gap: 28px; }
+}
+
+@media (max-width: 600px) {
+  .features-grid { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr; }
+  .solo-card { padding: 36px 24px; }
+  .policy-box { padding: 28px 20px; }
+  .hero-stats { flex-direction: column; gap: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">⚒️ Baretim <span>Mavi</span></a>
+  <ul class="nav-links">
+    <li><a href="#features">Özellikler</a></li>
+    <li><a href="#how">Nasıl Çalışır</a></li>
+    <li><a href="#gizlilik">Gizlilik</a></li>
+    <li><a href="https://play.google.com/store/apps/details?id=com.bluechip.finance" target="_blank" class="nav-btn">📲 İndir</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">🇹🇷 Türk İşçisinin Dijital Avukatı</div>
+  <h1 class="hero-title">Baretim<br><span class="accent">Mavi</span></h1>
+  <p class="hero-sub">Kıdem, ihbar, vergi, mesai, yıllık izin — tüm haklarını saniyeler içinde hesapla. Ücretsiz, reklamsız mod mevcut.</p>
+  <div class="hero-btns">
+    <a href="https://play.google.com/store/apps/details?id=com.bluechip.finance" target="_blank" class="btn-primary">
+      ▶ Google Play'den İndir
+    </a>
+    <a href="#features" class="btn-secondary">Özellikleri Keşfet →</a>
+  </div>
+  <div class="hero-stats">
+    <div>
+      <div class="stat-num">10+</div>
+      <div class="stat-label">Hesaplama Aracı</div>
+    </div>
+    <div>
+      <div class="stat-num">%100</div>
+      <div class="stat-label">Ücretsiz</div>
+    </div>
+    <div>
+      <div class="stat-num">2026</div>
+      <div class="stat-label">Güncel Veriler</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-label reveal">Özellikler</div>
+  <h2 class="section-title reveal">Her şey tek uygulamada</h2>
+  <p class="section-sub reveal">Türk iş hukukuna göre güncel hesaplamalar. Formüller, vergi dilimleri ve yasal sınırlar otomatik uygulanır.</p>
+
+  <div class="features-grid">
+    <div class="feat-card reveal">
+      <div class="feat-icon">⚖️</div>
+      <div class="feat-title">Kıdem & İhbar Tazminatı</div>
+      <div class="feat-desc">Güncel tavan tutarı ve damga vergisi ile net alacağınızı dakikalar içinde öğrenin. 8 farklı çıkış nedeni desteklenir.</div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">📊</div>
+      <div class="feat-title">Vergi & Bordro Analizi</div>
+      <div class="feat-desc">Brütten nete, netten brüte hesaplama. Aylık kümülatif vergi dilimi takibi, AGİ muafiyeti ve işveren maliyeti.</div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">⏱️</div>
+      <div class="feat-title">Mesai Takip</div>
+      <div class="feat-desc">Fazla mesai ücretlerini kaydet ve takip et. Aylık toplam net ve brüt kazancını otomatik hesapla.</div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">🏖️</div>
+      <div class="feat-title">Yıllık İzin & İşsizlik</div>
+      <div class="feat-desc">Hak kazandığın yıllık izin süresini ve işsizlik maaşı hesaplamalarını öğren.</div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">📈</div>
+      <div class="feat-title">Canlı Piyasa Verileri</div>
+      <div class="feat-desc">USD, EUR, Altın, BTC, ETH fiyatları anlık güncellenir. Özel kripto ekle, uzun bas sil.</div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">💰</div>
+      <div class="feat-title">Birikim & Ödeme Takibi</div>
+      <div class="feat-desc">Altın, döviz, kripto birikimlerini takip et. Aylık ödemeleri kaydet, maaş geri sayımını gör.</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<div id="how">
+  <div class="inner">
+    <div class="section-label reveal">Nasıl Çalışır</div>
+    <h2 class="section-title reveal">4 adımda hesapla</h2>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <div class="step-title">Uygulamayı İndir</div>
+        <div class="step-desc">Google Play'den ücretsiz indir, kurulum gerekmez.</div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">2</div>
+        <div class="step-title">Profilini Oluştur</div>
+        <div class="step-desc">Maaş, maaş günü ve çalışma bilgilerini gir.</div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">3</div>
+        <div class="step-title">Aracı Seç</div>
+        <div class="step-desc">Kıdem, vergi, mesai — ihtiyacın olan aracı aç.</div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">4</div>
+        <div class="step-title">Sonucu Paylaş</div>
+        <div class="step-desc">Hesaplama sonucunu görsel olarak paylaş veya kaydet.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SOLO DEV -->
+<section style="max-width:1100px;">
+  <div class="solo-card reveal">
+    <span class="solo-emoji">👨‍💻</span>
+    <h2 class="solo-title">Solo Geliştirici</h2>
+    <p class="solo-desc">Bu uygulamayı tek başıma, boş zamanlarımda geliştiriyorum. Bir yorum veya yıldız bırakmak çok büyük destek oluyor.</p>
+    <div class="stars-row">⭐⭐⭐⭐⭐</div>
+    <a href="https://play.google.com/store/apps/details?id=com.bluechip.finance" target="_blank" class="btn-primary" style="display:inline-flex;">
+      ⭐ Play Store'da Yorum Bırak
+    </a>
+  </div>
+</section>
+
+<!-- PRIVACY -->
+<section id="gizlilik">
+  <div class="section-label reveal">Yasal</div>
+  <h2 class="section-title reveal">Gizlilik Politikası</h2>
+  <p class="section-sub reveal">Kullanıcı gizliliği bizim için önceliktir. Verilerinizi asla üçüncü taraflarla paylaşmıyoruz.</p>
+
+  <div class="policy-box reveal">
+    <div class="policy-date">📅 Son güncelleme: 03.05.2026</div>
+
+    <p>Baretim Mavi ("uygulama") kullanıcıların gizliliğine önem verir. Bu politika, uygulamamızın kullanıcı verilerini nasıl topladığını, kullandığını ve koruduğunu açıklar.</p>
+
+    <h3>1. Toplanan Bilgiler</h3>
+    <p>Uygulama yalnızca cihazınızda yerel olarak saklanan aşağıdaki bilgileri işler:</p>
+    <ul>
+      <li>Kullanıcı tarafından girilen maaş, çalışma tarihi ve profil bilgileri</li>
+      <li>Mesai ve ödeme kayıtları (yalnızca cihazınızda saklanır)</li>
+      <li>Cihaz tipi ve işletim sistemi sürümü (yalnızca teknik destek için)</li>
+    </ul>
+    <p>Uygulama banka bilgisi, ödeme bilgisi veya kimlik bilgisi toplamaz.</p>
+
+    <h3>2. Bilgilerin Kullanımı</h3>
+    <ul>
+      <li>Uygulama deneyimini kişiselleştirmek</li>
+      <li>Hesaplamaların doğru çalışmasını sağlamak</li>
+      <li>Teknik iyileştirmeler ve hata düzeltmeleri</li>
+    </ul>
+
+    <h3>3. Reklam</h3>
+    <p>Uygulama, Google AdMob aracılığıyla reklam gösterebilir. AdMob, cihaz kimliği gibi teknik verileri kullanabilir. Reklam izleme tercihlerinizi cihaz ayarlarından yönetebilirsiniz. Reklamsız mod için uygulama içi ödüllü reklam izleyebilirsiniz.</p>
+
+    <h3>4. Bilgi Paylaşımı</h3>
+    <ul>
+      <li>Kullanıcı verileri hiçbir üçüncü tarafla satılmaz veya paylaşılmaz</li>
+      <li>Yalnızca yasal zorunluluk durumunda yetkili mercilerle paylaşılabilir</li>
+    </ul>
+
+    <h3>5. Veri Güvenliği</h3>
+    <p>Tüm veriler yalnızca cihazınızda saklanır. Sunucularımıza kişisel veri aktarımı yapılmaz. İnternet bağlantısı yalnızca piyasa verileri ve haber güncellemeleri için kullanılır.</p>
+
+    <h3>6. Çocukların Gizliliği</h3>
+    <p>Baretim Mavi 13 yaş altı çocuklar için tasarlanmamıştır. 13 yaş altından bilerek veri toplanmaz.</p>
+
+    <h3>7. Kullanıcı Hakları</h3>
+    <ul>
+      <li>Verilerinizi uygulama ayarlarından silebilirsiniz</li>
+      <li>Uygulamayı kaldırmak tüm yerel verileri siler</li>
+    </ul>
+
+    <h3>8. Değişiklikler</h3>
+    <p>Gizlilik politikamız zaman zaman güncellenebilir. Önemli değişikliklerde uygulama üzerinden bilgilendirme yapılır.</p>
+
+    <h3>9. İletişim</h3>
+    <p>Her türlü soru için: <a href="mailto:hakanerbasss@gmail.com" style="color:var(--pl);">hakanerbasss@gmail.com</a></p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">⚒️ Baretim <span>Mavi</span></div>
+    <p style="color:var(--muted);font-size:14px;">Türk işçisinin dijital avukatı</p>
+    <ul class="footer-links">
+      <li><a href="#features">Özellikler</a></li>
+      <li><a href="#how">Nasıl Çalışır</a></li>
+      <li><a href="#gizlilik">Gizlilik Politikası</a></li>
+      <li><a href="https://play.google.com/store/apps/details?id=com.bluechip.finance" target="_blank">Google Play</a></li>
+      <li><a href="mailto:hakanerbasss@gmail.com">İletişim</a></li>
+    </ul>
+    <div class="footer-copy">© 2026 Baretim Mavi · Tüm hakları saklıdır · Hakan Erbaş</div>
+  </div>
+</footer>
+
+<script>
+// Reveal on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
