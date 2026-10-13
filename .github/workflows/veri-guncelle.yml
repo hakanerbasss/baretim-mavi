@@ -1,0 +1,128 @@
+name: Veri güncelle
+
+# Her gün: TÜFE'yi TCMB'den kendiliğinden günceller, kıdem tavanı / asgari ücret / dilim vadesi geldiyse issue açar.
+# Elle: Actions → Veri güncelle → Run workflow ile rakamları girin; betik doğrular, işler ve uygulama kullanıcılara bildirim gösterir.
+# Ayrıntı: OTOMATIK-GUNCELLEME.md
+
+on:
+  schedule:
+    - cron: '17 6 * * *'        # her gün 09:17 (Türkiye)
+  workflow_dispatch:
+    inputs:
+      kidem_tavani:
+        description: 'Kıdem tazminatı tavanı (örn. 73729.87 — binlik ayracı yok)'
+        required: false
+      gecerlilik:
+        description: 'Tavanın başlangıç tarihi (YYYY-AA-GG, örn. 2027-01-01)'
+        required: false
+      asgari_ucret:
+        description: 'Brüt asgari ücret (örn. 33030)'
+        required: false
+      dilimler:
+        description: 'Gelir vergisi dilimleri JSON: [[190000,0.15],[400000,0.20],[1500000,0.27],[5300000,0.35],[999999999,0.40]]'
+        required: false
+      yil:
+        description: 'Tarife yılı (yalnızca yıl değişiyorsa)'
+        required: false
+      duyuru:
+        description: 'Kullanıcıya gösterilecek bildirim metni (boşsa otomatik yazılır)'
+        required: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: veri-guncelle
+  cancel-in-progress: false
+
+jobs:
+  guncelle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Bağımlılık
+        run: pip install requests
+
+      - name: Birim testleri
+        run: python3 -m unittest discover -s tools -p 'test_*.py'
+
+      # Elle girilen rakamlar (yalnızca Run workflow ile). Değerler ortam değişkeniyle geçer: komut satırına gömülmez.
+      - name: Girilen rakamları uygula
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          KIDEM_TAVANI: ${{ inputs.kidem_tavani }}
+          GECERLILIK: ${{ inputs.gecerlilik }}
+          ASGARI_UCRET: ${{ inputs.asgari_ucret }}
+          DILIMLER: ${{ inputs.dilimler }}
+          YIL: ${{ inputs.yil }}
+          DUYURU: ${{ inputs.duyuru }}
+        run: |
+          args=()
+          if [ -n "$KIDEM_TAVANI" ]; then args+=(--kidem-tavani "$KIDEM_TAVANI"); fi
+          if [ -n "$GECERLILIK" ];   then args+=(--gecerlilik "$GECERLILIK"); fi
+          if [ -n "$ASGARI_UCRET" ]; then args+=(--asgari-ucret "$ASGARI_UCRET"); fi
+          if [ -n "$DILIMLER" ];     then args+=(--dilimler "$DILIMLER"); fi
+          if [ -n "$YIL" ];          then args+=(--yil "$YIL"); fi
+          if [ -n "$DUYURU" ];       then args+=(--duyuru "$DUYURU"); fi
+          if [ ${#args[@]} -eq 0 ]; then
+            echo "Rakam girilmedi: yalnızca TÜFE ve vade kontrolü yapılacak."
+          else
+            python3 tools/veri_guncelle.py uygula "${args[@]}"
+          fi
+
+      # TCMB sayfası bozulursa betik hiçbir şey yazmaz; iş en sonda kırmızıya döner ama diğer adımlar yine çalışır.
+      - name: TÜFE (TCMB)
+        id: tufe
+        continue-on-error: true
+        run: python3 tools/veri_guncelle.py tufe
+
+      - name: Değişiklik varsa kaydet
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tax_parameters.json inflation_rates.json veri_durumu.json
+          if git diff --cached --quiet; then
+            echo "Değişiklik yok."
+            exit 0
+          fi
+          git diff --cached --stat
+          git commit -m "Veri güncellendi (${{ github.event_name == 'schedule' && 'otomatik' || 'elle' }}): $(git diff --cached --name-only | tr '\n' ' ')"
+          git push
+
+      # Vadesi gelip işlenmemiş kalem → issue (aynı başlıkla bir kez); işlenince kendiliğinden kapanır.
+      - name: Bekleyen güncellemeler için issue
+        run: |
+          gh label create veri-guncelle --color 0e8a16 --description "Veri güncelleme vadesi" --force
+          python3 tools/veri_guncelle.py kontrol --json > bekleyen.json
+          cat bekleyen.json
+          mevcut=$(gh issue list --label veri-guncelle --state open --json number,title)
+          jq -c '.[]' bekleyen.json | while read -r kalem; do
+            baslik=$(jq -r '.baslik' <<<"$kalem")
+            govde=$(jq -r '.govde' <<<"$kalem")
+            if jq -e --arg b "$baslik" 'any(.[]; .title == $b)' <<<"$mevcut" >/dev/null; then
+              echo "Zaten açık: $baslik"
+            else
+              gh issue create --label veri-guncelle --title "$baslik" --body "$govde"
+            fi
+          done
+          jq -c '.[]' <<<"$mevcut" | while read -r acik; do
+            baslik=$(jq -r '.title' <<<"$acik")
+            if ! jq -e --arg b "$baslik" 'any(.[]; .baslik == $b)' bekleyen.json >/dev/null; then
+              gh issue close "$(jq -r '.number' <<<"$acik")" --comment "İşlendi: artık bekleyen güncelleme yok."
+            fi
+          done
+
+      - name: TÜFE adımı başarısızsa işi kırmızı yap
+        if: steps.tufe.outcome == 'failure'
+        run: |
+          echo "::error::TCMB TÜFE tablosu okunamadı ya da doğrulanamadı; inflation_rates.json değişmedi."
+          exit 1

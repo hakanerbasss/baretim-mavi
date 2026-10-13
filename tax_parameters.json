@@ -1,16 +1,22 @@
 {
   "year": 2026,
-  "last_update": "2026-02-02",
+  "last_update": "2026-10-13",
   "min_wage_gross": 33030,
-  "severance_ceiling": 64948.77,
+  "severance_ceiling": 73729.87,
   "stamp_tax_rate": 0.00759,
   "sgk_employee_rate": 0.14,
   "unemployment_rate": 0.01,
   "tax_brackets": [
     {"limit": 190000, "rate": 0.15},
-    {"limit": 550000, "rate": 0.20},
-    {"limit": 1900000, "rate": 0.27},
-    {"limit": 6600000, "rate": 0.35},
-    {"limit": 999999999, "rate": 0.40}
-  ]
+    {"limit": 400000, "rate": 0.2},
+    {"limit": 1500000, "rate": 0.27},
+    {"limit": 5300000, "rate": 0.35},
+    {"limit": 999999999, "rate": 0.4}
+  ],
+  "severance_ceiling_history": [
+    {"from": "2026-01-01", "amount": 64948.77},
+    {"from": "2026-07-01", "amount": 73729.87}
+  ],
+  "sgk_ceiling_multiplier": 9,
+  "announcement": "Kıdem tazminatı tavanı 73.729,87 ₺ oldu (1 Temmuz 2026) ve net maaş hesabı bordroyla uyumlu hale getirildi. Hesaplarını yenile."
 }
