@@ -193,6 +193,14 @@ class UygulaTesti(unittest.TestCase):
         with self.assertRaises(v.VeriHatasi):
             v.uygula(TAX, BUGUN)
 
+    def test_yalniz_duyuru_bildirim_tetikler(self):
+        yeni = v.uygula(TAX, BUGUN, duyuru='Yeni sürüm yayında: net maaş hesabı bordroyla uyumlu.')
+        self.assertEqual(yeni['last_update'], '2026-10-13')
+        self.assertEqual(yeni['announcement'], 'Yeni sürüm yayında: net maaş hesabı bordroyla uyumlu.')
+        self.assertEqual(yeni['severance_ceiling'], TAX['severance_ceiling'])
+        with self.assertRaises(v.VeriHatasi):
+            v.uygula(TAX, BUGUN, duyuru='   ')
+
     def test_ozel_duyuru(self):
         yeni = v.uygula(TAX, BUGUN, asgari_ucret='38000', duyuru='Net maaş hesabı güncellendi.')
         self.assertEqual(yeni['announcement'], 'Net maaş hesabı güncellendi.')

@@ -40,6 +40,9 @@ Bu yüzden rakamı bir insan girer, betik yalnızca **doğrular ve işler**; vad
 | `yil` | `2027` | Yalnızca tarife yılı değişiyorsa. |
 | `duyuru` | `Kıdem tavanı 85.000,50 ₺ oldu.` | Boşsa rakamlardan otomatik yazılır. |
 
+Yalnızca `duyuru` doldurulursa rakamlar değişmeden **sadece bildirim** gider (örn. yeni sürüm yayına çıkınca
+"Net maaş hesabı düzeltildi, uygulamayı güncelleyin").
+
 Yanlış girişte betik **hiçbir dosyayı değiştirmeden** hata verir. Doğru girişte `tax_parameters.json` güncellenir ve
 `last_update` bugüne alınır.
 
@@ -49,7 +52,8 @@ Uygulama `tax_parameters.json` içindeki `last_update` değeri değişince yerel
 alanındadır. Bu yüzden **rakam girişi = bildirim**. (TÜFE güncellemesi `last_update`'e dokunmaz: her ay bildirim yağmaz.)
 
 - **Sürüm 2.76 ve sonrası:** uygulama kapalıyken de en geç ~12 saatte bir kontrol eder.
-- **Sürüm 2.75 ve öncesi:** bildirim, kullanıcı hesap ekranlarını açtığında gösterilir.
+- **Sürüm 2.75 ve öncesi:** bildirim, kullanıcı hesap ekranlarını açtığında gösterilir; metin `announcement` değil, uygulamanın
+  kendi genel metnidir ("Vergi dilimleri ve tazminat tavanı güncellendi. Hesaplarını yenile." veya asgari ücret değiştiyse onu söyleyen).
 - Uygulamada Firebase (FCM) yok: Play Store'dan indirmiş birine "şimdi" anlık push göndermek mümkün değil.
 
 ## Elle çalıştırma (Termux / bilgisayar)

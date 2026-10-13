@@ -10,7 +10,8 @@ NE OTOMATİK, NE DEĞİL — bilerek ayrıldı:
              (yılda bir) için "güncelleme zamanı geldi mi?" diye bakar; geldiyse GitHub'da issue açılması için
              liste döner.
 * `uygula` — TEK DOKUNUŞ. Rakamları verilen değerlerle, doğrulayarak işler (tax_parameters.json) ve last_update'i
-             günceller; uygulama last_update değişince kullanıcılara bildirim gösterir.
+             günceller; uygulama last_update değişince kullanıcılara bildirim gösterir. Yalnızca `--duyuru` verilirse rakam
+             değişmeden sadece bildirim gönderilir (örn. yeni sürüm yayına çıkınca "güncelleyin" duyurusu).
 
 Neden tavan/asgari ücret/dilim otomatik OKUNMUYOR: bunların makinece okunabilir, sabit adresli resmî bir kaynağı yok
 (haber sitelerinden okumak yanlış bir rakamı TÜM kullanıcılara yayımlayabilir). Yanlış net/tazminat, güncelleme
@@ -202,7 +203,7 @@ def uygula(tax, bugun, kidem_tavani=None, gecerlilik=None, asgari_ucret=None, di
         if yil < int(yeni.get('year') or 0):
             raise VeriHatasi('yil geriye gidemez')
         yeni['year'] = yil
-    if not mesajlar and yil is None:
+    if not mesajlar and yil is None and not (duyuru or '').strip():
         raise VeriHatasi('Güncellenecek bir şey verilmedi')
     yeni['sgk_ceiling_multiplier'] = yeni.get('sgk_ceiling_multiplier', 9)
     yeni['last_update'] = bugun.isoformat()
